@@ -1,0 +1,35 @@
+﻿@page "/userlist"
+
+
+@inherits UserListProcess
+
+
+
+@if (userList != null)
+{
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">İsim Soyisim</th>
+                <th scope="col">E-Mail Adres</th>
+                <th scope="col">Oluşturulma Tarihi</th>
+                <th scope="col">Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in userList)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.FullName</td>
+                    <td>@user.EMailAddress</td>
+                    <td>@user.CreateDate</td>
+                    <td>@user.IsActive</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+

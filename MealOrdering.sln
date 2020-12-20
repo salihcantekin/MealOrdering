@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealOrdering.Server", "MealOrdering\Server\MealOrdering.Server.csproj", "{F3F5C510-94EB-4FF4-B7C7-4E0009C5ED23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealOrdering.Server", "MealOrdering\Server\MealOrdering.Server.csproj", "{F3F5C510-94EB-4FF4-B7C7-4E0009C5ED23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealOrdering.Client", "MealOrdering\Client\MealOrdering.Client.csproj", "{59B2C0EC-85C1-4599-BB95-3C2A4BB8017A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealOrdering.Client", "MealOrdering\Client\MealOrdering.Client.csproj", "{59B2C0EC-85C1-4599-BB95-3C2A4BB8017A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealOrdering.Shared", "MealOrdering\Shared\MealOrdering.Shared.csproj", "{F7D15C23-155A-42E6-A9A1-04A1FB46DBF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealOrdering.Shared", "MealOrdering\Shared\MealOrdering.Shared.csproj", "{F7D15C23-155A-42E6-A9A1-04A1FB46DBF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealOrdering.Server.Data", "MealOrdering.Server.Data\MealOrdering.Server.Data.csproj", "{8B478C82-72FA-407B-8879-366D62A7027E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealOrdering.Server.Data", "MealOrdering.Server.Data\MealOrdering.Server.Data.csproj", "{8B478C82-72FA-407B-8879-366D62A7027E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

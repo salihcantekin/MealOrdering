@@ -16,7 +16,7 @@ namespace MealOrdering.Client.Pages.Users
         public HttpClient Client { get; set; }
 
 
-        protected List<UserDTO> userList = new List<UserDTO>();
+        protected List<UserDTO> UserList = new List<UserDTO>();
 
 
 
@@ -33,7 +33,7 @@ namespace MealOrdering.Client.Pages.Users
             var serviceResponse = await Client.GetFromJsonAsync<ServiceResponse<List<UserDTO>>>("api/User/Users");
 
             if (serviceResponse.Success)
-                userList = serviceResponse.Value;
+                UserList = serviceResponse.Value;
         }
 
 

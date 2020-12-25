@@ -21,14 +21,39 @@ namespace MealOrdering.Server.Controllers
             userService = UserService;
         }
 
-
-
         [HttpGet("Users")]
         public async Task<ServiceResponse<List<UserDTO>>> GetUsers()
         {
             return new ServiceResponse<List<UserDTO>>()
             {
                 Value = await userService.GetUsers()
+            };
+        }
+
+        [HttpPost("Create")]
+        public async Task<ServiceResponse<UserDTO>> CreateUser([FromBody] UserDTO User)
+        {
+            return new ServiceResponse<UserDTO>()
+            {
+                Value = await userService.CreateUser(User)
+            };
+        }
+
+        [HttpPost("Update")]
+        public async Task<ServiceResponse<UserDTO>> UpdateUser([FromBody] UserDTO User)
+        {
+            return new ServiceResponse<UserDTO>()
+            {
+                Value = await userService.UpdateUser(User)
+            };
+        }
+
+        [HttpGet("UserById/{Id}")]
+        public async Task<ServiceResponse<UserDTO>> GetUserById(Guid Id)
+        {
+            return new ServiceResponse<UserDTO>()
+            {
+                Value = await userService.GetUserById(Id)
             };
         }
     }

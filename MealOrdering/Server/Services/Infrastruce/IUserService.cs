@@ -19,5 +19,7 @@ namespace MealOrdering.Server.Services.Infrastruce
 
         public Task<bool> DeleteUserById(Guid Id);
 
+        public Task<String> Login(string EMail, string Password);
+
     }
 }

@@ -3,15 +3,15 @@ using MealOrdering.Server.Data.Context;
 using MealOrdering.Server.Services.Extensions;
 using MealOrdering.Server.Services.Infrastruce;
 using MealOrdering.Server.Services.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MealOrdering.Server
 {
@@ -42,6 +42,25 @@ namespace MealOrdering.Server
             {
                 config.UseNpgsql("User ID=pgloader_user;password=pgloader_user;Host=db.postgres.local;Port=5432;Database=mealordering;SearchPath=public");
                 config.EnableSensitiveDataLogging();
+            });
+
+            services.AddAuthentication(opt => 
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options => 
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                { 
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["JwtIssuer"],
+                    ValidAudience = Configuration["JwtAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
+                };
             });
         }
 

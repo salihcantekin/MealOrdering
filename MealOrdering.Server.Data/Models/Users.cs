@@ -16,6 +16,8 @@ namespace MealOrdering.Server.Data.Models
 
         public String EMailAddress { get; set; }
 
+        public String Password { get; set; }
+
         public bool IsActive { get; set; }
 
         public virtual ICollection<Orders> Orders { get; set; }

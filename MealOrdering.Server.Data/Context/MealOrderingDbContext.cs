@@ -35,6 +35,7 @@ namespace MealOrdering.Server.Data.Context
                 entity.Property(i => i.FirstName).HasColumnName("first_name").HasColumnType("character varying").HasMaxLength(100);
                 entity.Property(i => i.LastName).HasColumnName("last_name").HasColumnType("character varying").HasMaxLength(100);
                 entity.Property(i => i.EMailAddress).HasColumnName("email_address").HasColumnType("character varying").HasMaxLength(100);
+                entity.Property(i => i.Password).HasColumnName("password").HasColumnType("character varying").HasMaxLength(250);
 
                 entity.Property(i => i.CreateDate).HasColumnName("create_date").HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("NOW()");

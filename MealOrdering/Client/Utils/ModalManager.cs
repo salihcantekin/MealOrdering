@@ -38,7 +38,7 @@ namespace MealOrdering.Client.Utils
         {
             ModalParameters mParams = new ModalParameters();
             mParams.Add("Message", Message);
-
+            
             var modalRef = modalService.Show<ConfirmationPopupComponent>(Title, mParams);
             var modalResult = await modalRef.Result;
 

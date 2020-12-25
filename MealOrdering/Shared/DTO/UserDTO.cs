@@ -16,6 +16,8 @@ namespace MealOrdering.Shared.DTO
 
         public String EMailAddress { get; set; }
 
+        public String Password { get; set; }
+
         public bool IsActive { get; set; }
 
         public String FullName => $"{FirstName} {LastName}";

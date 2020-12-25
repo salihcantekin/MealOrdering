@@ -21,6 +21,15 @@ namespace MealOrdering.Server.Controllers
             userService = UserService;
         }
 
+        [HttpGet("Login")]
+        public async Task<ServiceResponse<String>> Login(String Email, String Passord)
+        {
+            return new ServiceResponse<String>()
+            {
+                Value = await userService.Login(Email, Passord)
+            };
+        }
+
         [HttpGet("Users")]
         public async Task<ServiceResponse<List<UserDTO>>> GetUsers()
         {

@@ -1,7 +1,20 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<h1>Hello, world! Counter is @counter</h1>
 
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+
+@code
+{
+    private int counter = 0;
+
+    protected async override Task OnInitializedAsync()
+    {
+        counter = await localStorage.GetItemAsync<int>("counter");
+    }
+}

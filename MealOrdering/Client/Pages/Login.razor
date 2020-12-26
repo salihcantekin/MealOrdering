@@ -1,0 +1,72 @@
+﻿@page "/login"
+@layout MealOrdering.Client.Shared.EmptyLayout
+
+
+
+
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center h-100">
+
+        <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
+
+            <EditForm Model="@userLoginRequest" OnValidSubmit="loginProcess">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <input @bind-value="userLoginRequest.Email" class="form-control form-control-lg" type="text" placeholder="E-Mail Address" />
+                </div>
+
+                <div class="form-group">
+                    <input @bind-value="userLoginRequest.Password" class="form-control form-control-lg" type="password" placeholder="Password" />
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-info btn-block">Login</button>
+                </div>
+
+            </EditForm>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+@code {
+
+    [Inject]
+    HttpClient Client { get; set; }
+
+    [Inject]
+    ModalManager ModalManager { get; set; }
+
+    [Inject]
+    NavigationManager NavManeger { get; set; }
+
+    private UserLoginRequestDTO userLoginRequest = new UserLoginRequestDTO();
+
+
+    private async Task loginProcess()
+    {
+        var httpReqRes = await Client.PostAsJsonAsync("api/User/Login", userLoginRequest);
+
+        if (httpReqRes.IsSuccessStatusCode)
+        {
+            var res = await httpReqRes.Content.ReadFromJsonAsync<ServiceResponse<UserLoginResponseDTO>>();
+
+            if (res.Success)
+            {
+                NavManeger.NavigateTo("/");
+            }
+            else
+            {
+                await ModalManager.ShowMessageAsync("Login Error", res.Message);
+            }
+        }
+
+    }
+
+}

@@ -76,7 +76,7 @@ namespace MealOrdering.Server.Services.Services
                         .ToListAsync();
         }
 
-        public async Task<String> Login(string EMail, string Password)
+        public async Task<UserLoginResponseDTO> Login(string EMail, string Password)
         {
             // Veritabanı Kullanıcı Doğrulama İşlemleri Yapıldı.
 
@@ -91,6 +91,8 @@ namespace MealOrdering.Server.Services.Services
                 throw new Exception("User state is Passive!");
 
 
+            UserLoginResponseDTO result = new UserLoginResponseDTO();
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiry = DateTime.Now.AddDays(int.Parse(configuration["JwtExpiryInDays"].ToString()));
@@ -103,9 +105,10 @@ namespace MealOrdering.Server.Services.Services
 
             var token = new JwtSecurityToken(configuration["JwtIssuer"], configuration["JwtAudience"], claims, null, expiry, creds);
 
-            String tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+            result.ApiToken = new JwtSecurityTokenHandler().WriteToken(token);
+            result.User = mapper.Map<UserDTO>(dbUser);
 
-            return tokenStr;
+            return result;
         }
 
         public async Task<UserDTO> UpdateUser(UserDTO User)

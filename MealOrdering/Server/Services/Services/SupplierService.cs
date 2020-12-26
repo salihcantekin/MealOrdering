@@ -48,7 +48,7 @@ namespace MealOrdering.Server.Services.Services
         {
             var dbSupplier = await context.Suppliers.FirstOrDefaultAsync(i => i.Id == Supplier.Id);
             if (dbSupplier == null)
-                throw new Exception("Restorant Bulunamadı");
+                throw new Exception("Supplier not found");
 
             mapper.Map(Supplier, dbSupplier);
             await context.SaveChangesAsync();
@@ -60,12 +60,12 @@ namespace MealOrdering.Server.Services.Services
         {
             var Supplier = await context.Suppliers.FirstOrDefaultAsync(i => i.Id == SupplierId);
             if (Supplier == null)
-                throw new Exception("Restorant bulunamadı");
+                throw new Exception("Supplier not found");
 
             int orderCount = await context.Suppliers.Include(i => i.Orders).Select(i => i.Orders.Count).FirstOrDefaultAsync();
 
             if (orderCount > 0)
-                throw new Exception($"Silmeye çalıştığınız restorant için oluşturulmuş {orderCount} adet sipariş mevcut.");
+                throw new Exception($"There are {orderCount} sub order for the order you are trying to delete");
 
             context.Suppliers.Remove(Supplier);
             await context.SaveChangesAsync();

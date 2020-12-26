@@ -36,7 +36,7 @@ namespace MealOrdering.Server.Services.Services
             var dbUser = await context.Users.Where(i => i.Id == User.Id).FirstOrDefaultAsync();
 
             if (dbUser != null)
-                throw new Exception("İlgili Kayıt Zaten Mevcut");
+                throw new Exception("User already exists");
 
 
             dbUser = mapper.Map<Data.Models.Users>(User);
@@ -52,7 +52,7 @@ namespace MealOrdering.Server.Services.Services
             var dbUser = await context.Users.Where(i => i.Id == Id).FirstOrDefaultAsync();
 
             if (dbUser == null)
-                throw new Exception("Kullanıcı Bulunamadı");
+                throw new Exception("User not found");
 
             context.Users.Remove(dbUser);
             int result = await context.SaveChangesAsync();
@@ -85,10 +85,10 @@ namespace MealOrdering.Server.Services.Services
             var dbUser = await context.Users.FirstOrDefaultAsync(i => i.EMailAddress == EMail && i.Password == encryptedPassword);
 
             if (dbUser == null)
-                throw new Exception("Kullanıcı Bulunamadı veya Bilgiler Yanlış");
+                throw new Exception("User not found or given information is wrong");
 
             if (!dbUser.IsActive)
-                throw new Exception("Kullanıcı Pasif Durumdadır!");
+                throw new Exception("User state is Passive!");
 
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecurityKey"]));
@@ -113,7 +113,7 @@ namespace MealOrdering.Server.Services.Services
             var dbUser = await context.Users.Where(i => i.Id == User.Id).FirstOrDefaultAsync();
 
             if (dbUser == null)
-                throw new Exception("İlgili Kayıt Bulunamadı");
+                throw new Exception("User not found");
 
 
             mapper.Map(User, dbUser);

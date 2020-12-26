@@ -63,7 +63,7 @@ namespace MealOrdering.Server.Services.Services
         {
             var dbOrder = await context.Orders.FirstOrDefaultAsync(i => i.Id == Order.Id);
             if (dbOrder == null)
-                throw new Exception("Sipariş Bulunamadı");
+                throw new Exception("Order not found");
 
             mapper.Map(Order, dbOrder);
             await context.SaveChangesAsync();
@@ -76,11 +76,11 @@ namespace MealOrdering.Server.Services.Services
             var detailCount = await context.OrderItems.Where(i => i.OrderId == OrderId).CountAsync();
 
             if (detailCount > 0)
-                throw new Exception($"Bu siparişe ait {detailCount} adet alt sipariş var.");
+                throw new Exception($"There are {detailCount} sub items for the order you are trying to delete");
 
             var order = await context.Orders.FirstOrDefaultAsync(i => i.Id == OrderId);
             if (order == null)
-                throw new Exception("Sipariş bulunamadı");
+                throw new Exception("Order not found");
 
             context.Orders.Remove(order);
 
@@ -124,10 +124,10 @@ namespace MealOrdering.Server.Services.Services
                 .FirstOrDefaultAsync();
 
             if (order == null)
-                throw new Exception("İlgili Siparişin Ana Kaydı Bulunamadı.");
+                throw new Exception("The main order not found");
 
             if (order <= DateTime.Now)
-                throw new Exception("Kapanmış Siparişe Yeni Giriş Yapılamaz!!!");
+                throw new Exception("You cannot create sub order. It is expired !!!");
 
 
             var dbOrder = mapper.Map<Data.Models.OrderItems>(OrderItem);
@@ -141,7 +141,7 @@ namespace MealOrdering.Server.Services.Services
         {
             var dbOrder = await context.OrderItems.FirstOrDefaultAsync(i => i.Id == OrderItem.Id);
             if (dbOrder == null)
-                throw new Exception("Sipariş Bulunamadı");
+                throw new Exception("Order not found");
 
             mapper.Map(OrderItem, dbOrder);
             await context.SaveChangesAsync();
@@ -153,7 +153,7 @@ namespace MealOrdering.Server.Services.Services
         {
             var orderItem = await context.OrderItems.FirstOrDefaultAsync(i => i.Id == OrderItemId);
             if (orderItem == null)
-                throw new Exception("Sipariş Detayı Bulunamadı");
+                throw new Exception("Sub order not found");
 
             context.OrderItems.Remove(orderItem);
 

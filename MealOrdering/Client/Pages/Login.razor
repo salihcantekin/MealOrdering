@@ -46,6 +46,12 @@
     [Inject]
     NavigationManager NavManeger { get; set; }
 
+    [Inject]
+    ILocalStorageService localStorageService { get; set; }
+
+    [Inject]
+    AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
     private UserLoginRequestDTO userLoginRequest = new UserLoginRequestDTO();
 
 
@@ -55,15 +61,30 @@
 
         if (httpReqRes.IsSuccessStatusCode)
         {
-            var res = await httpReqRes.Content.ReadFromJsonAsync<ServiceResponse<UserLoginResponseDTO>>();
+            try
+            {
+                var res = await httpReqRes.Content.ReadFromJsonAsync<ServiceResponse<UserLoginResponseDTO>>();
 
-            if (res.Success)
-            {
-                NavManeger.NavigateTo("/");
+                if (res.Success)
+                {
+
+                    await localStorageService.SetItemAsync("token", res.Value.ApiToken);
+                    await localStorageService.SetItemAsync("email", res.Value.User.EMailAddress);
+
+                    (AuthenticationStateProvider as AuthStateProvider).NotifyUserLogin(res.Value.User.EMailAddress);
+
+                    Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", res.Value.ApiToken);
+
+                    NavManeger.NavigateTo("/");
+                }
+                else
+                {
+                    await ModalManager.ShowMessageAsync("Login Error", res.Message);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await ModalManager.ShowMessageAsync("Login Error", res.Message);
+                await ModalManager.ShowMessageAsync("Login Error", ex.Message);
             }
         }
 

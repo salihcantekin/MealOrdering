@@ -20,6 +20,8 @@ namespace MealOrdering.Client.Pages.Users
         [Inject]
         ModalManager ModalManager { get; set; }
 
+        [Inject]
+        NavigationManager NavigationManager { get; set; }
 
         protected List<UserDTO> UserList = new List<UserDTO>();
 
@@ -29,6 +31,16 @@ namespace MealOrdering.Client.Pages.Users
             await LoadList();
         }
 
+
+        protected void goCreateUserPage()
+        {
+            NavigationManager.NavigateTo("/users/add");
+        }
+
+        protected void goUpdateUserPage(Guid UserId)
+        {
+            NavigationManager.NavigateTo("/users/edit/" + UserId);
+        }
 
         protected async Task LoadList()
         {

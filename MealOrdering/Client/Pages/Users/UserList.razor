@@ -3,7 +3,12 @@
 
 @inherits UserListProcess
 
+<div class="btn-group">
+    <div class="container">
+        <AddNewButtonComponent Caption="Create User" OnClick="goCreateUserPage" />
+    </div>
 
+</div>
 
 @if (UserList != null)
 {
@@ -15,6 +20,8 @@
                 <th scope="col">E-Mail</th>
                 <th scope="col">Created Date</th>
                 <th scope="col">Status</th>
+                <th scope="col">#</th>
+
             </tr>
         </thead>
         <tbody>
@@ -29,6 +36,7 @@
                     <td>@user.CreateDate</td>
                     @*<td>@user.IsActive</td>*@
                     <td> <span class="@spanClass"> @(user.IsActive ? "Active" : "Passive")</span></td>
+                    <td> <CustomEditButtonComponent IsSmall="true" Caption="" IsOutline="true" OnClick="@(()=>goUpdateUserPage(user.Id))" /> </td>
                 </tr>
             }
 

@@ -40,7 +40,7 @@ namespace MealOrdering.Server.Data.Context
                 entity.Property(i => i.CreateDate).HasColumnName("create_date").HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("NOW()");
 
-                entity.Property(i => i.IsActive).HasColumnName("isactive").HasColumnType("boolean").HasDefaultValueSql("true");
+                entity.Property(i => i.IsActive).HasColumnName("isactive").HasColumnType("boolean");
             });
 
 

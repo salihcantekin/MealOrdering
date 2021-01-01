@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MealOrdering.Server.Data.Models;
 using MealOrdering.Shared.DTO;
+using MealOrdering.Shared.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace MealOrdering.Server.Services.Extensions
                 .ReverseMap();
 
             CreateMap<Users, UserDTO>()
+                .ForMember(x => x.Password, y => y.MapFrom(z => PasswordEncrypter.Encrypt(z.Password)))
                 .ReverseMap();
 
             CreateMap<Orders, OrderDTO>()

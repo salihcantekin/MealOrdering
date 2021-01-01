@@ -1,4 +1,6 @@
-﻿using MealOrdering.Shared.DTO;
+﻿using MealOrdering.Client.Utils;
+using MealOrdering.Shared.CustomExceptions;
+using MealOrdering.Shared.DTO;
 using MealOrdering.Shared.ResponseModels;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -15,11 +17,11 @@ namespace MealOrdering.Client.Pages.Users
         [Inject]
         public HttpClient Client { get; set; }
 
+        [Inject]
+        ModalManager ModalManager { get; set; }
+
 
         protected List<UserDTO> UserList = new List<UserDTO>();
-
-
-
 
 
         protected async override Task OnInitializedAsync()
@@ -30,13 +32,19 @@ namespace MealOrdering.Client.Pages.Users
 
         protected async Task LoadList()
         {
-            var serviceResponse = await Client.GetFromJsonAsync<ServiceResponse<List<UserDTO>>>("api/User/Users");
-
-            if (serviceResponse.Success)
-                UserList = serviceResponse.Value;
+            try
+            {
+                UserList = await Client.GetServiceResponseAsync<List<UserDTO>>("api/User/Users", true);
+            }
+            catch (ApiException ex)
+            {
+                await ModalManager.ShowMessageAsync("Api Exception", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await ModalManager.ShowMessageAsync("Exception", ex.Message);
+            }
         }
-
-
 
     }
 }

@@ -11,21 +11,24 @@
         <thead>
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">İsim Soyisim</th>
-                <th scope="col">E-Mail Adres</th>
-                <th scope="col">Oluşturulma Tarihi</th>
-                <th scope="col">Durum</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">E-Mail</th>
+                <th scope="col">Created Date</th>
+                <th scope="col">Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var user in UserList)
             {
+                String spanClass = "badge badge-pill badge-" + (user.IsActive ? "success" : "danger");
+
                 <tr>
                     <td>@user.Id</td>
                     <td>@user.FullName</td>
                     <td>@user.EMailAddress</td>
                     <td>@user.CreateDate</td>
-                    <td>@user.IsActive</td>
+                    @*<td>@user.IsActive</td>*@
+                    <td> <span class="@spanClass"> @(user.IsActive ? "Active" : "Passive")</span></td>
                 </tr>
             }
 

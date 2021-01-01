@@ -20,8 +20,8 @@
 
     public async override Task SetParametersAsync(ParameterView parameters)
     {
-        Message = parameters.GetValueOrDefault<String>("Message") ?? "Mesaj Yok";
-        OkText = "OK";
+        Message = parameters.GetValueOrDefault<String>("Message", "Mesaj Yok");
+        OkText = parameters.GetValueOrDefault<String>("OkText", "OK");
 
         await base.SetParametersAsync(parameters);
     }

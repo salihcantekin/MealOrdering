@@ -68,5 +68,15 @@ namespace MealOrdering.Server.Controllers
                 Value = await userService.GetUserById(Id)
             };
         }
+
+
+        [HttpPost("Delete")]
+        public async Task<ServiceResponse<bool>> DeleteUser([FromBody]Guid id)
+        {
+            return new ServiceResponse<bool>()
+            {
+                Value = await userService.DeleteUserById(id)
+            };
+        }
     }
 }

@@ -42,6 +42,28 @@ namespace MealOrdering.Client.Pages.Users
             NavigationManager.NavigateTo("/users/edit/" + UserId);
         }
 
+        protected async Task DeleteUser(Guid Id)
+        {
+            bool confirmed = await ModalManager.ConfirmationAsync("Confirmation", "User will be deleted. Are you sure?");
+
+            if (!confirmed) return;
+
+            try
+            {
+                bool deleted = await Client.PostGetServiceResponseAsync<bool, Guid>("api/User/Delete", Id, true);
+
+                await LoadList();
+            }
+            catch (ApiException ex)
+            {
+                await ModalManager.ShowMessageAsync("User Deletion Error", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await ModalManager.ShowMessageAsync("An Error", ex.Message);
+            }
+        }
+
         protected async Task LoadList()
         {
             try

@@ -49,7 +49,7 @@ namespace MealOrdering.Server.Services.Services
 
         public async Task<bool> DeleteUserById(Guid Id)
         {
-            var dbUser = await context.Users.Where(i => i.Id == Id).FirstOrDefaultAsync();
+            var dbUser = await context.Users.FirstOrDefaultAsync(i => i.Id == Id);
 
             if (dbUser == null)
                 throw new Exception("User not found");
@@ -125,5 +125,7 @@ namespace MealOrdering.Server.Services.Services
 
             return mapper.Map<UserDTO>(dbUser);
         }
+
+        
     }
 }

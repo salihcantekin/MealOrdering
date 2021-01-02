@@ -22,10 +22,6 @@ namespace MealOrdering.Client.Utils
                 return !res.Success && ThrowSuccessException ? throw new ApiException(res.Message) : res.Value;
             }
 
-            Console.WriteLine(httpRes.StatusCode);
-            Console.WriteLine(httpRes.IsSuccessStatusCode);
-            Console.WriteLine(httpRes.ReasonPhrase);
-
             throw new HttpException(httpRes.StatusCode.ToString());
         }
 

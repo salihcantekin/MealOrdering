@@ -1,0 +1,12 @@
+﻿
+@inherits BaseButtonComponent
+
+<ButtonComponent ToolTipStr="@(ToolTipStr ?? "Refresh")"
+                 Color="@(Color ?? "success")"
+                 Icon="@(Icon ?? "refresh")"
+                 OnClick="OnClick"
+                 Caption="@(Caption ?? "Refresh")"
+                 IsOutline="@IsOutline"
+                 IsBusy="@IsBusy"
+                 IsBusyCaption="@(IsBusyCaption ?? "Loading")"
+                 IsSmall="@IsSmall" />

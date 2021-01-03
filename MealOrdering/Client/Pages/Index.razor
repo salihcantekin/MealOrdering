@@ -8,10 +8,21 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
+<p>
+    Selected Guid is @supplierGuid.ToString()
+</p>
+
+<br />
+
+
+<MealOrdering.Client.CustomComponents.SupplierDropDown @bind-Value="supplierGuid" @bind-Value:event="ValueChanged" />
+
 
 @code
 {
     private int counter = 0;
+
+    private Guid supplierGuid = Guid.Parse("74e46038-0e08-44d9-9048-2be988f189f4");
 
     protected async override Task OnInitializedAsync()
     {

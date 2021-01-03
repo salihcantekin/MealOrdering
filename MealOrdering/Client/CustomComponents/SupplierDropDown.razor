@@ -1,0 +1,84 @@
+﻿
+@if (supplierList == null)
+{
+    <p>
+        <em>
+            @loadingMessage
+        </em>
+    </p>
+}
+else
+{
+    <BlazoredTypeahead SearchMethod="@searchSupplier"
+                       TValue="SupplierDTO"
+                       TItem="SupplierDTO"
+                       Value="selectedSupplier"
+                       ValueChanged="SelectedSupplierChanged"
+                       ValueExpression="@(() => selectedSupplier)"
+                       placeholder="Search by supplier name"
+                       ShowDropDownOnFocus="true"
+                       EnableDropDown="true"
+                       Debounce="500">
+        <SelectedTemplate>
+            @context.Name
+        </SelectedTemplate>
+        <ResultTemplate>
+            @context.Name (@context.IsActive.ToString())
+        </ResultTemplate>
+        <NotFoundTemplate>
+            Sorry, there weren't any search results.
+        </NotFoundTemplate>
+    </BlazoredTypeahead>
+}
+
+
+
+
+
+@code {
+
+    [Parameter]
+    public Guid Value { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> ValueChanged { get; set; }
+
+    [Inject]
+    HttpClient Client { get; set; }
+
+    List<SupplierDTO> supplierList;
+    SupplierDTO selectedSupplier = new SupplierDTO();
+
+    String loadingMessage = "Loading...";
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            supplierList = await Client.GetServiceResponseAsync<List<SupplierDTO>>("api/Supplier/Suppliers");
+        }
+        catch (ApiException)
+        {
+            loadingMessage = "Loading Error";
+        }
+    }
+
+    private Task SelectedSupplierChanged(SupplierDTO Supplier)
+    {
+        if (Supplier == null)
+        {
+            return ValueChanged.InvokeAsync(Guid.Empty);
+        }
+
+        selectedSupplier = Supplier;
+        Value = Supplier.Id;
+
+        return ValueChanged.InvokeAsync(Supplier.Id);
+    }
+
+
+    async Task<IEnumerable<SupplierDTO>> searchSupplier(String searchText)
+    {
+        return await Task.FromResult(supplierList.Where(i => i.Name.ToUpper().Contains(searchText.ToUpper())).ToList());
+    }
+}

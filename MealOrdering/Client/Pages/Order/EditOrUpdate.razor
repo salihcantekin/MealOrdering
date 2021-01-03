@@ -1,0 +1,135 @@
+﻿@page "/orders/add"
+@page "/orders/edit/{editId:guid}"
+
+
+<br />
+
+<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-row">
+
+        <div class="form-group col">
+            <label>Order Name</label>
+
+            <InputText @bind-Value="model.Name" class="form-control" />
+            <ValidationMessage For="@(() => model.Name)" />
+        </div>
+
+        <div class="form-group col">
+            <label>Expire Date</label>
+
+            <InputDateTime class="form-control" @bind-Value="model.ExpireDate" />
+
+            <ValidationMessage For="@(() => model.ExpireDate)" />
+        </div>
+
+    </div>
+    <div class="form-row">
+        <div class="form-group col">
+            <label>Created User</label>
+
+            <input value="Created User Name Will Be Here" class="form-control" type="tel" />
+        </div>
+
+        <div class="form-group col">
+            <label>Supplier</label>
+
+            @*<SupplierDropDown @bind-Value="model.SupplierId" @bind-Value:event="ValueChanged" />*@
+            <ValidationMessage For="@(() => model.SupplierId)" />
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label>Sipariş Açıklaması</label>
+
+        <InputTextArea class="form-control" @bind-Value="model.Description" />
+    </div>
+
+    <br />
+    <div class="form-group">
+
+        <SaveButtonComponent IsBusy="@loading" Caption="@(editId.IsNull() ? "Create" : "Update")" />
+        <CancelButtonComponent OnClick="@( () => NavigationManager.NavigateTo("/orders/list"))" />
+
+    </div>
+
+    <br />
+
+</EditForm>
+
+@code
+{
+    [Parameter]
+    public Guid editId { get; set; }
+
+
+    [Inject]
+    public HttpClient Http { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    ModalManager ModalManager { get; set; }
+
+    [Inject]
+    ILocalStorageService LocalStorage { get; set; }
+
+
+
+    private OrderDTO model { get; set; } = new OrderDTO();
+
+    private bool loading;
+    private String pageTitle;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        pageTitle = (editId.IsNull() ? "Create" : "Edit") + " Order";
+
+        try
+        {
+            if (!editId.IsNull()) // Updating
+            {
+                var res = await Http.GetFromJsonAsync<ServiceResponse<OrderDTO>>("api/Order/OrderById/" + editId.ToString());
+
+                if (res.Success)
+                    model = res.Value;
+            }
+            else
+            {
+                model.ExpireDate = DateTime.Now.Date;
+            }
+
+        }
+        catch (ApiException ex)
+        {
+            await ModalManager.ShowMessageAsync("Api Exception", ex.Message);
+        }
+
+        var guid = Guid.Parse(await LocalStorage.GetItemAsync<String>("UserId"));
+        if (!guid.IsNull())
+            model.CreatedUserId = guid;
+    }
+
+    private async void OnValidSubmit()
+    {
+        String url = "api/Order/CreateOrder";
+
+        if (!editId.IsNull()) // updating
+            url = "api/Order/UpdateOrder";
+
+        try
+        {
+            model = await Http.PostGetServiceResponseAsync<OrderDTO, OrderDTO>(url, model);
+
+            NavigationManager.NavigateTo("/orders/list");
+        }
+        catch (ApiException ex)
+        {
+            await ModalManager.ShowMessageAsync("Api Exception", ex.ToString());
+        }
+    }
+}

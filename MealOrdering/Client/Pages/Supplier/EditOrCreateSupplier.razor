@@ -1,0 +1,123 @@
+﻿@page "/suppliers/add"
+@page "/suppliers/edit/{SupplierId:guid}"
+
+
+    <br />
+
+    <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-row">
+
+            <div class="form-group col">
+                <label>Supplier Name</label>
+                <InputText @bind-Value="model.Name" class="form-control" />
+            </div>
+
+            <div class="form-group col">
+                <label>Web URL</label>
+                <InputText @bind-Value="model.WebURL" class="form-control" />
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-group col">
+
+                <div class="form-check">
+                    <InputCheckbox @bind-Value="model.IsActive" class="form-check-input" id="chSupplierStatus" />
+                    <label class="form-check-label" for="chSupplierStatus">
+                        Supplier Status
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <SaveButtonComponent IsBusy="@loading" Caption="@(SupplierId.IsNull() ? "Create" : "Update")" />
+            <CancelButtonComponent OnClick="goBackSupplierItemList" />
+        </div>
+
+    </EditForm>
+
+
+
+
+
+    @code {
+
+        [Parameter]
+        public Guid SupplierId { get; set; }
+
+        [Inject]
+        public HttpClient Http { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        ModalManager ModalManager { get; set; }
+
+
+        private SupplierDTO model = new SupplierDTO();
+        private bool loading;
+        private String pageTitle;
+
+        private async void OnValidSubmit() // Save
+        {
+            String url = "api/Supplier/CreateSupplier";
+
+            if (!SupplierId.IsNull()) // updating
+            {
+                url = "api/Supplier/UpdateSupplier";
+            }
+
+            try
+            {
+                model = await Http.PostGetServiceResponseAsync<SupplierDTO, SupplierDTO>(url, model, true);
+
+                goBackSupplierItemList();
+            }
+            catch (ApiException ex)
+            {
+                await ModalManager.ShowMessageAsync("Saving Error", ex.Message);
+                return;
+            }
+        }
+
+        protected async override Task OnInitializedAsync()
+        {
+            try
+            {
+                pageTitle = (SupplierId.IsNull() ? "Create" : "Edit") + " Supplier";
+
+                loading = true;
+                if (!SupplierId.IsNull()) // Updating
+                {
+                    try
+                    {
+                        model = await Http.GetServiceResponseAsync<SupplierDTO>("api/Supplier/SupplierById/" + SupplierId.ToString(), true);
+                    }
+                    catch (ApiException ex)
+                    {
+                        await ModalManager.ShowMessageAsync("List Error", ex.Message);
+                        return;
+                    }
+                }
+            }
+            finally
+            {
+                loading = false;
+            }
+        }
+
+        private void goBackSupplierItemList()
+        {
+            NavigationManager.NavigateTo("/suppliers/list");
+        }
+
+    }

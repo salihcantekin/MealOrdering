@@ -53,7 +53,7 @@ namespace MealOrdering.Server.Data.Context
 
                 entity.Property(e => e.Id).HasColumnName("id").HasColumnType("uuid").HasDefaultValueSql("public.uuid_generate_v4()").IsRequired();
 
-                entity.Property(e => e.IsActive).HasColumnName("isactive").HasColumnType("boolean").HasDefaultValueSql("true");
+                entity.Property(e => e.IsActive).HasColumnName("isactive").HasColumnType("boolean");
                 entity.Property(e => e.Name).HasColumnName("name").HasColumnType("character varying").HasMaxLength(100);
                 entity.Property(e => e.CreateDate).HasColumnName("createdate").HasColumnType("timestamp without time zone").HasDefaultValueSql("NOW()").ValueGeneratedOnAdd();
 

@@ -1,0 +1,55 @@
+﻿@page "/suppliers/list"
+
+@inherits MealOrdering.Client.Pages.PageProcess.Supplier
+
+
+<br />
+
+<div class="btn-group">
+    <RefreshButtonComponent OnClick="ReLoadList" />
+    <AddNewButtonComponent OnClick="GoCreateSupplier" Caption="Create Supplier" />
+</div>
+<br />
+<br />
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">#</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (SupplierList == null) SupplierList = new List<MealOrdering.Shared.DTO.SupplierDTO>();
+
+        @foreach (var supplier in SupplierList)
+        {
+            String spanClass = "badge badge-pill badge-" + (supplier.IsActive ? "success" : "danger");
+            <tr>
+                <td>@supplier.Id</td>
+                <td>@supplier.Name</td>
+                <td>@supplier.CreateDate.ToCustomDateTimeString()</td>
+                <td> <span class="@spanClass"> @(supplier.IsActive ? "Active" : "Passive")</span></td>
+
+                <td>
+                    <div class="btn-toolbar">
+
+                        <CustomEditButtonComponent IsSmall="true" Caption="" IsOutline="true" OnClick="(() => GoEditOrder(supplier.Id))" />
+                        <DeleteButtonComponent IsSmall="true" Caption="" IsOutline="true" OnClick="(() => DeleteSupplier(supplier.Id))" />
+
+                        @if (!String.IsNullOrEmpty(supplier.WebURL) && Uri.TryCreate(supplier.WebURL, UriKind.RelativeOrAbsolute, out Uri Result))
+                        {
+                            <ButtonComponent Color="info" Icon="info-circle" Caption="" IsOutline="true" IsSmall="true" OnClick="(()=> GoWebUrl(Result))" />
+                        }
+                    </div>
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

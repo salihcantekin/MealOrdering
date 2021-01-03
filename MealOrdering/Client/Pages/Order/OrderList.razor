@@ -1,0 +1,50 @@
+﻿@page "/orders/list"
+
+@inherits MealOrdering.Client.Pages.PageProcess.OrderBusiness
+
+
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            @*<th scope="col">Id</th>*@
+            <th scope="col">Name</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Supplier</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Expire Date</th>
+            <th scope="col">Remaining</th>
+            <th scope="col">#</th>
+            <th scope="col" style="width: auto">#</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (OrderList == null) OrderList = new List<MealOrdering.Shared.DTO.OrderDTO>();
+
+        @foreach (var order in OrderList)
+        {
+            <tr class="@(IsExpired(order.ExpireDate) ? "bg-warning":"")">
+                @*<td>@order.Id</td>*@
+                <td>@order.Name</td>
+                <td>@order.CreatedUserFullName</td>
+                <td>@order.SupplierName</td>
+                <td>@order.CreateDate.ToCustomDateTimeString()</td>
+                <td>@order.ExpireDate.ToCustomDateTimeString()</td>
+                <td>@(IsExpired(order.ExpireDate) ? "Expired" : order.ExpireDate.GetRemaningDateStr())</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" @onclick="(() => GoDetails(order.Id))">Sub Orders</button>
+
+                </td>
+                <td>
+                    <div class="btn-toolbar">
+                        <CustomEditButtonComponent IsSmall="true" IsOutline="true" Caption="" OnClick="(() => GoEditOrder(order.Id))" />
+                        <DeleteButtonComponent IsSmall="true" IsOutline="true" Caption="" OnClick="(() => DeleteOrder(order.Id))" />
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

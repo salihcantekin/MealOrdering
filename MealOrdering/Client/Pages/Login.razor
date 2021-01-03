@@ -71,6 +71,7 @@
                     await localStorageService.SetItemAsync("token", res.Value.ApiToken);
                     await localStorageService.SetItemAsync("email", res.Value.User.EMailAddress);
                     await localStorageService.SetItemAsync("UserId", res.Value.User.Id.ToString());
+                    await localStorageService.SetItemAsync("UserFullName", res.Value.User.FullName);
 
                     (AuthenticationStateProvider as AuthStateProvider).NotifyUserLogin(res.Value.User.EMailAddress);
 

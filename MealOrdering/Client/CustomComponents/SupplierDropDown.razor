@@ -56,6 +56,10 @@ else
         try
         {
             supplierList = await Client.GetServiceResponseAsync<List<SupplierDTO>>("api/Supplier/Suppliers");
+
+            if (!Value.IsNull())
+                selectedSupplier = supplierList.FirstOrDefault(i => i.Id == Value);
+
         }
         catch (ApiException)
         {

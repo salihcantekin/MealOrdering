@@ -80,7 +80,7 @@ namespace MealOrdering.Client.Pages.PageProcess
                 loading = false;
             }
         }
-
+        
         public bool IsExpired(DateTime ExpireDate)
         {
             TimeSpan ts = ExpireDate.Subtract(DateTime.Now);

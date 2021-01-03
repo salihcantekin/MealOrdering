@@ -1,0 +1,135 @@
+﻿@page "/orders/add"
+@page "/orders/edit/{OrderId:guid}"
+
+
+<p>
+    @pageTitle
+</p>
+
+<br />
+<br />
+
+<EditForm Model="@orderModel" OnValidSubmit="onValidSubmit">
+    <DataAnnotationsValidator />
+
+
+    <div class="form-row">
+        <div class="form-group col">
+            <label>Order Name</label>
+            <InputText @bind-Value="orderModel.Name" class="form-control" />
+            <ValidationMessage For="@(()=>orderModel.Name)" />
+        </div>
+
+        <div class="form-group col">
+            <label>Expire Date</label>
+
+            <InputDateTime class="form-control" @bind-Value="orderModel.ExpireDate" />
+            <ValidationMessage For="@(()=>orderModel.ExpireDate)" />
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col">
+            <label>Created User Name</label>
+
+            @if (!OrderId.IsNull())
+            {
+                <input value="@orderModel.CreatedUserFullName" class="form-control" disabled />
+            }
+            else
+            {
+                <input value="@myFullName" class="form-control" type="text" disabled />
+            }
+        </div>
+
+        <div class="form-group col">
+            <label>Supplier</label>
+
+            <SupplierDropDown @bind-Value="orderModel.SupplierId" @bind-Value:event="ValueChanged" />
+            <ValidationMessage For="@(()=>orderModel.SupplierId)" />
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label>Order Description</label>
+        <InputTextArea class="form-control" @bind-Value="orderModel.Description" />
+    </div>
+
+
+    <br />
+    <div class="form-group">
+        <SaveButtonComponent Caption="Save" />
+        <CancelButtonComponent Caption="Cancel" OnClick="goBackOrderList" />
+    </div>
+
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public Guid OrderId { get; set; }
+
+    [Inject]
+    HttpClient HttpClient { get; set; }
+
+    [Inject]
+    ModalManager ModalManager { get; set; }
+
+    [Inject]
+    NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    ILocalStorageService LocalStorageService { get; set; }
+
+
+    OrderDTO orderModel = new OrderDTO();
+
+    String pageTitle = "Create Order";
+    String myFullName = "";
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            if (!OrderId.IsNull()) // updating
+            {
+                orderModel = await HttpClient.GetServiceResponseAsync<OrderDTO>("api/Order/OrderById/" + OrderId);
+                pageTitle = "Edit Order";
+            }
+
+            myFullName = await LocalStorageService.GetUserFullName();
+        }
+        catch (ApiException ex)
+        {
+            await ModalManager.ShowMessageAsync("Api Exception", ex.Message);
+        }
+    }
+
+    async Task onValidSubmit()
+    {
+        String url = "api/Order/CreateOrder";
+
+        if (!OrderId.IsNull())
+            url = "api/Order/UpdateOrder";
+
+        try
+        {
+            orderModel.CreatedUserId = await LocalStorageService.GetUserId();
+            orderModel = await HttpClient.PostGetServiceResponseAsync<OrderDTO, OrderDTO>(url, orderModel);
+            goBackOrderList();
+        }
+        catch (ApiException ex)
+        {
+            await ModalManager.ShowMessageAsync("Api Exception", ex.Message);
+        }
+    }
+
+    void goBackOrderList()
+    {
+        NavigationManager.NavigateTo("/orders/list");
+    }
+
+}

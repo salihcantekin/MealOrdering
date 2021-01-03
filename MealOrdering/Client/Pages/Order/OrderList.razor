@@ -2,7 +2,13 @@
 
 @inherits MealOrdering.Client.Pages.PageProcess.OrderBusiness
 
+<div class="btn-group">
+    <RefreshButtonComponent Caption="Refresh List" OnClick="ReLoadList" />
+    <AddNewButtonComponent Caption="Create Order" OnClick="GoCreateOrder" />
+</div>
 
+<br />
+<br />
 
 <table class="table table-hover table-sm">
     <thead>
@@ -14,7 +20,6 @@
             <th scope="col">Created Date</th>
             <th scope="col">Expire Date</th>
             <th scope="col">Remaining</th>
-            <th scope="col">#</th>
             <th scope="col" style="width: auto">#</th>
         </tr>
     </thead>
@@ -32,10 +37,7 @@
                 <td>@order.CreateDate.ToCustomDateTimeString()</td>
                 <td>@order.ExpireDate.ToCustomDateTimeString()</td>
                 <td>@(IsExpired(order.ExpireDate) ? "Expired" : order.ExpireDate.GetRemaningDateStr())</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary" @onclick="(() => GoDetails(order.Id))">Sub Orders</button>
 
-                </td>
                 <td>
                     <div class="btn-toolbar">
                         <CustomEditButtonComponent IsSmall="true" IsOutline="true" Caption="" OnClick="(() => GoEditOrder(order.Id))" />

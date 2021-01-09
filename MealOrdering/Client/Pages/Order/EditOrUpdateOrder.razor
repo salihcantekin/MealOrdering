@@ -11,13 +11,14 @@
 
 <EditForm Model="@orderModel" OnValidSubmit="onValidSubmit">
     <DataAnnotationsValidator />
+    <ValidationSummary />
 
 
     <div class="form-row">
         <div class="form-group col">
             <label>Order Name</label>
             <InputText @bind-Value="orderModel.Name" class="form-control" />
-            <ValidationMessage For="@(()=>orderModel.Name)" />
+            @*<ValidationMessage For="@(()=>orderModel.Name)" />*@
         </div>
 
         <div class="form-group col">

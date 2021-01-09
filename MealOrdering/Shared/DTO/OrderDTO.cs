@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace MealOrdering.Shared.DTO
 {
@@ -14,8 +15,11 @@ namespace MealOrdering.Shared.DTO
 
         public Guid SupplierId { get; set; }
 
+        [MinLength(3, ErrorMessage = "Minimum lenght must be 3 characters for Name Field")]
+        [StringLength(10)]
         public String Name { get; set; }
 
+        [StringLength(100)]
         public String Description { get; set; }
 
         public DateTime ExpireDate { get; set; }

@@ -1,0 +1,56 @@
+﻿@inject HttpClient Http
+
+@if (UserList == null)
+{
+    <p>
+        <em>Loading ...</em>
+    </p>
+}
+else
+{
+    <select class="custom-select" bind="@Value" @onchange="OnValueChanged">
+        <option value="Select" selected>(Select User)</option>
+
+        @foreach (var user in UserList)
+        {
+            if (user.Id == Value)
+            {
+                <option selected value="@user.Id">@user.FullName</option>
+            }
+            else
+            {
+                <option value="@user.Id">@user.FullName</option>
+            }
+        }
+
+    </select>
+}
+
+@code
+{
+    private List<UserDTO> UserList { get; set; } = new List<UserDTO>();
+
+    [Parameter]
+    public Guid Value { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> ValueChanged { get; set; }
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        var httpRes = await Http.GetFromJsonAsync<ServiceResponse<List<UserDTO>>>("api/User/Users");
+
+        UserList = httpRes.Value;
+    }
+
+    private Task OnValueChanged(ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value.ToString(), out Guid x))
+            Value = x;
+        else
+            Value = Guid.Empty;
+
+        return ValueChanged.InvokeAsync(Value);
+    }
+}

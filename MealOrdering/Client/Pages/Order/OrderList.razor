@@ -2,10 +2,44 @@
 
 @inherits MealOrdering.Client.Pages.PageProcess.OrderBusiness
 
-<div class="btn-group">
-    <RefreshButtonComponent Caption="Refresh List" OnClick="ReLoadList" />
-    <AddNewButtonComponent Caption="Create Order" OnClick="GoCreateOrder" />
+
+
+<div class="card">
+    <div class="card-header d-flex align-items-center h-75">
+        Filter Section
+    </div>
+
+    <div class="card-body">
+        <EditForm Model="@filterModel">
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label>Create User</label>
+                    <UserListDropDown @bind-Value="filterModel.CreatedUserId" @bind-Value:event="ValueChanged" />
+                </div>
+
+                <div class="form-group col">
+                    <label>Create Date</label>
+                    <div class="d-flex">
+                        <InputDate class="form-control" @bind-Value="filterModel.CreateDateFirst" />
+                        <InputDate class="form-control" @bind-Value="filterModel.CreateDateLast" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="btn-group">
+                    <RefreshButtonComponent Caption="List" OnClick="ReLoadList" />
+                    <AddNewButtonComponent Caption="Create Order" OnClick="GoCreateOrder" />
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
 </div>
+
+
 
 <br />
 <br />

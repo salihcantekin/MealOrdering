@@ -3,6 +3,7 @@ using MealOrdering.Client.Utils;
 using MealOrdering.Shared.CustomExceptions;
 using MealOrdering.Shared.DTO;
 using MealOrdering.Shared.FilterModels;
+using MealOrdering.Shared.ResponseModels;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,7 @@ namespace MealOrdering.Client.Pages.PageProcess
                 loading = false;
             }
         }
-        
+
         public bool IsExpired(DateTime ExpireDate)
         {
             TimeSpan ts = ExpireDate.Subtract(DateTime.Now);
@@ -91,21 +92,25 @@ namespace MealOrdering.Client.Pages.PageProcess
 
         public async Task DeleteOrder(Guid OrderId)
         {
-            var modalRes = await ModalManager.ConfirmationAsync("Confirm", "Order will be deleted. Are you sure?");
-            if (!modalRes)
-                return;
-
-            var res = await Http.PostGetBaseResponseAsync("api/Order/DeleteOrder", OrderId);
-
-            if (res.Success)
+            try
             {
+                var modalRes = await ModalManager.ConfirmationAsync("Confirm", "Order will be deleted. Are you sure?");
+                if (!modalRes)
+                    return;
+
+                var res = await Http.GetServiceResponseAsync<BaseResponse>("api/Order/DeleteOrder/" + OrderId, true);
+                
                 OrderList.RemoveAll(i => i.Id == OrderId);
-                //await loadList();
             }
-            else
+            catch (ApiException ex)
             {
-                await ModalManager.ShowMessageAsync("Deletion Error", res.Message);
+                await ModalManager.ShowMessageAsync("Deletion Error", ex.Message);
             }
+        }
+
+        public bool IsMyOrder(Guid CreatedUserId)
+        {
+            return LocalStorageSync.GetUserIdSync() == CreatedUserId;
         }
     }
 }

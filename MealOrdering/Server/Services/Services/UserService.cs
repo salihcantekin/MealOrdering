@@ -100,7 +100,8 @@ namespace MealOrdering.Server.Services.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email, EMail),
-                new Claim(ClaimTypes.Name, dbUser.FirstName + " " + dbUser.LastName)
+                new Claim(ClaimTypes.Name, dbUser.FirstName + " " + dbUser.LastName),
+                new Claim(ClaimTypes.UserData, dbUser.Id.ToString())
             };
 
             var token = new JwtSecurityToken(configuration["JwtIssuer"], configuration["JwtAudience"], claims, null, expiry, creds);

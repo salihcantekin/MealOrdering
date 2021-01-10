@@ -119,7 +119,7 @@
         try
         {
             orderModel.CreatedUserId = await LocalStorageService.GetUserId();
-            orderModel = await HttpClient.PostGetServiceResponseAsync<OrderDTO, OrderDTO>(url, orderModel);
+            orderModel = await HttpClient.PostGetServiceResponseAsync<OrderDTO, OrderDTO>(url, orderModel, true);
             goBackOrderList();
         }
         catch (ApiException ex)

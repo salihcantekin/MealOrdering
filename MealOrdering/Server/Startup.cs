@@ -8,6 +8,7 @@ using MealOrdering.Server.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,9 +39,15 @@ namespace MealOrdering.Server
 
             services.ConfigureMapping();
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<HttpContextAccessor>();
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IValidationService, ValidationService>();
+
+            
 
             services.AddDbContext<MealOrderingDbContext>(config => 
             {

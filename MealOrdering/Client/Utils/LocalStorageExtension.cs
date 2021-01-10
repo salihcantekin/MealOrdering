@@ -16,6 +16,13 @@ namespace MealOrdering.Client.Utils
             return Guid.TryParse(userGuid, out Guid UserId) ? UserId : Guid.Empty;
         }
 
+        public static Guid GetUserIdSync(this ISyncLocalStorageService LocalStorage)
+        {
+            String userGuid = LocalStorage.GetItemAsString("UserId");
+
+            return Guid.TryParse(userGuid, out Guid UserId) ? UserId : Guid.Empty;
+        }
+
         public async static Task<String> GetUserEMail(this ILocalStorageService LocalStorage)
         {
             return await LocalStorage.GetItemAsStringAsync("email");

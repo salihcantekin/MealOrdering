@@ -16,11 +16,13 @@ namespace MealOrdering.Server.Services.Services
     {
         private readonly MealOrderingDbContext context;
         private readonly IMapper mapper;
+        private readonly IValidationService validationService;
 
-        public OrderService(MealOrderingDbContext Context, IMapper Mapper)
+        public OrderService(MealOrderingDbContext Context, IMapper Mapper, IValidationService ValidationService)
         {
             context = Context;
             mapper = Mapper;
+            validationService = ValidationService;
         }
 
 
@@ -91,6 +93,10 @@ namespace MealOrdering.Server.Services.Services
             if (dbOrder == null)
                 throw new Exception("Order not found");
 
+
+            if (!validationService.HasPermission(dbOrder.CreatedUserId))
+                throw new Exception("You cannot change the order unless you created");
+
             mapper.Map(Order, dbOrder);
             await context.SaveChangesAsync();
 
@@ -101,12 +107,19 @@ namespace MealOrdering.Server.Services.Services
         {
             var detailCount = await context.OrderItems.Where(i => i.OrderId == OrderId).CountAsync();
 
+
             if (detailCount > 0)
                 throw new Exception($"There are {detailCount} sub items for the order you are trying to delete");
 
             var order = await context.Orders.FirstOrDefaultAsync(i => i.Id == OrderId);
             if (order == null)
                 throw new Exception("Order not found");
+
+
+            if (!validationService.HasPermission(order.CreatedUserId))
+                throw new Exception("You cannot change the order unless you created");
+
+
 
             context.Orders.Remove(order);
 
